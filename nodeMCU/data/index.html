@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Control</title>
+	<meta charset="UTF-8">
+	<style type="text/css">
+
+		:root {
+			--anchoMenuBloques: 340px;
+			--anchoMenuConsola: 500px;
+			--altoCabecera: 50px;
+
+			--anchoBloque : 300px;
+
+			--colBack1: #171814;
+			--colBack2: #272822;
+			--colBack3: #49483E;
+			--colLines: #49483E;
+			--colLines2: #ffffff;
+			--colText1: #ffffff;
+			--colText2: #747f66;
+			--colText3: #171814;
+			--colHighlight1: #fba44f;
+			--colHighlight2: #ee5e91;
+			--colHighlight3: #9ad74c;
+			--colHighlight4: #66D9EF;
+			--colHighlight5: #FF6652;
+
+			--colConsolaBack : #000000;
+			--colConsolaText : #ffffff;
+			--colConsolaError : #ffcccc;
+			--colConsolaErrorB : #cc0000;
+			--colConsolaSuccess : #b3ffb3;
+			--colConsolaSuccessB : #006600;
+			--colConsolaWarning : #ff0000;
+			--colConsolaWarningB : #ffff00;
+		}
+
+		html, body {
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			font-family: Arial,Helvetica Neue,Helvetica,sans-serif; 
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			overflow: hidden;
+		}
+
+		#cabecera{
+			position: absolute;
+			width: 100%;
+			height: var(--altoCabecera);
+			background-color: var(--colBack3);
+			z-index: 7;
+			-moz-box-shadow:    0 0 10px #000000;
+			-webkit-box-shadow: 0 0 10px #000000;
+			box-shadow:         0 0 10px #000000;
+		}
+
+		#cabecera .desplegable, #cabecera button{
+			display: inline-block;
+			float: left;
+			height: calc(var(--altoCabecera) - 20px);
+		}
+
+		#cabecera .desplegable{
+			width: auto;
+			line-height: calc(var(--altoCabecera) - 20px);
+			color: var(--colText1);
+			border-color: var(--colBack3);
+			border-style: solid;
+			border-width: 2px;
+			margin-left: 0px;
+			margin-top: 3px;
+			padding: 5px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#cabecera .desplegable.active.hover{
+			background-color: var(--colBack2);
+			overflow: visible;
+		}
+
+		#cabecera .desplegable:hover{
+			border-color: var(--colBack2);
+		}
+
+		#cabecera button{
+			width: 32px;
+			color: var(--colBack3);
+			background-color: var(--colText1);
+			border-style: outset;
+			font-weight: bold;
+			font-size: 15px;
+			margin-left: 10px;
+			margin-top: 10px;
+			border-radius: 10px;
+		}
+
+		#cabecera button:active{
+			border-style: inset;
+		}
+
+		#cabecera .line{
+			width: 2px;
+			margin-left: 5px;
+			margin-top: 10px;
+			background-color: var(--colText1);
+			display: inline-block;
+			float: left;
+			height: 60%;
+		}
+
+		#cabecera .desplegado{
+			margin-left: -7px;
+			width: auto;
+			position: absolute;
+			top: 40px;
+			background-color: var(--colBack3);
+			box-shadow: 2px 2px 2px #000000;
+			white-space: nowrap;
+		}
+
+		#cabecera .desplegado div{
+			width: auto;
+			line-height: calc(var(--altoCabecera) - 20px);
+			color: var(--colText1);
+			margin-top: 2px;
+			padding: 5px;
+			padding-left: 40px;
+			padding-right: 30px;
+			position: relative;
+		}
+
+		#cabecera .desplegado div::before{
+			position: absolute;
+			margin-left: -30px;
+			font-size: 20px;
+		}
+
+		#cabecera .desplegado div.nuevoIco::before{
+			content: "\1F5CE";
+			font-size: 25px;
+		}
+
+		#cabecera .desplegado div.importarIco::before{
+			content: "\1F5AB";
+		}
+
+		#cabecera .desplegado div.exportarIco::before{
+			content: "\21E7\1F5CE";
+			margin-left: -35px;
+		}
+
+		#cabecera .desplegado div.importarIco::before{
+			content: "\21E9\1F5CE";
+			margin-left: -35px;
+		}
+
+
+		#cabecera .desplegado div.subirIco::before{
+			content: "\2B71";
+			margin-left: -28px;
+			font-size: 24px;
+		}
+
+		#cabecera .desplegado div.verificarIco::before{
+			content: "\2699";
+		}
+
+		#cabecera .desplegado div.tickIco::before{
+			content: "\2713";
+		}
+
+		#cabecera .desplegado div:hover{
+			background-color: var(--colBack2);
+		}
+
+		#menuBloques, #menuConsola{
+			position: absolute;
+			height: calc(100% - var(--altoCabecera));
+			top: var(--altoCabecera);
+			background-color: var(--colBack2);
+			border-width: 3px;
+			border-color: var(--colLines);
+			-moz-box-shadow:    0 0 20px #000000;
+			-webkit-box-shadow: 0 0 20px #000000;
+			box-shadow:         0 0 20px #000000;
+			overflow: auto;
+
+			-webkit-transition: width 0.2s;
+			transition: width 0.2s;
+		}
+
+		#menuBloques{
+			width: calc(var(--anchoMenuBloques) - 3px);
+			border-right-style: solid;
+			z-index: 3;
+		}
+
+		#menuConsola{
+			right: 0;
+			width: calc(var(--anchoMenuConsola) - 3px);
+			border-left-style: solid;
+			z-index: 6;
+		}
+
+		#consola{
+			margin: 10px;
+			width: calc(100% - 30px);
+			height: calc(100% - 30px);
+			background-color: var(--colConsolaBack);
+			border-style: solid;
+			border-color: var(--colLines);
+			border-width: 2px;
+			-webkit-user-select: text;
+			-moz-user-select: text;
+			-ms-user-select: text;
+			user-select: text;
+			overflow: auto;
+			word-wrap: break-word;
+		}
+
+		#consola div{
+			width: calc(100% - 35px);
+			line-height: 20px;
+			display: block;
+			margin-top: 2px;
+			padding-top: 5px;
+			padding-left: 25px;
+			padding-bottom: 5px;
+			padding-right: 10px; 
+			position: relative;
+			font-size: 14px;
+			font-family: "Courier New", Courier, monospace;
+			color: var(--colConsolaText);
+		}
+
+		#consola .pointer{
+			width: 0;
+			height: 0;
+			margin: 0;
+			padding: 0;
+		}
+
+		#consola label{
+			width: calc(100% - 25px);
+			line-height: 20px;
+			display: block;
+			margin-top: 2px;
+			padding-top: 5px;
+			padding-left: 25px;
+			padding-bottom: 5px;
+			position: relative;
+			color: var(--colConsolaText);
+		}
+		#consola input{
+			width: calc(100% - 25px);
+			line-height: 20px;
+			display: block;
+			position: relative;
+			font-size: 14px;
+			background-color: var(--colConsolaBack);
+			border: none;
+			font-family: "Courier New", Courier, monospace;
+			color: var(--colConsolaText);
+		}
+
+
+		#consola .line::before, #consola label::before{
+			font-weight: normal;
+			position: absolute;
+			content: "\00226B";
+			left: 3px;
+			top: 5px;
+			font-size: 20px;
+		}
+
+		#consola .error::before{
+			font-weight: normal;
+			position: absolute;
+			content: "\00D7";
+			left: 4px;
+			top: 5px;
+			font-size: 30px;
+		}
+
+		#consola .success::before{
+			font-weight: normal;
+			position: absolute;
+			content: "\2713";
+			left: 4px;
+			top: 6px;
+			font-size: 20px;
+		}
+
+		#consola .warning::before{
+			font-weight: normal;
+			position: absolute;
+			content: "\26A0";
+			left: 4px;
+			top: 6px;
+			font-size: 20px;
+		}
+
+		#consola .error{
+			background-color: var(--colConsolaErrorB);
+			color: var(--colConsolaError);
+			font-weight: bold;
+		}
+
+		#consola .success{
+			background-color: var(--colConsolaSuccessB);
+			color: var(--colConsolaSuccess);
+			font-weight: bold;
+		}
+
+		#consola .warning{
+			background-color: var(--colConsolaWarningB);
+			color: var(--colConsolaWarning);
+			font-weight: bold;
+		}
+
+		#cuerpo{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+
+			background-color: var(--colBack1);
+			background-image: linear-gradient(#0d0e0c 2px, transparent 2px),
+			linear-gradient(90deg, #0d0e0c 2px, transparent 2px),
+			linear-gradient(#0d0e0c 1px, transparent 1px),
+			linear-gradient(90deg, #0d0e0c 1px, transparent 1px);
+			background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+			background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+
+			z-index: 1;
+		}
+
+
+		#menuBoton, #menuBoton2{
+			background-color: var(--colBack3);
+			border-radius: 5px;
+			position: absolute;
+			top: calc(var(--altoCabecera) + 2px);
+			z-index: 5;
+			text-align: center;
+			width: 25px;
+			height: 25px;
+			padding: 0;
+			border-color: var(--colLines);
+			border-style: solid;
+			-webkit-transition: left 0.2s;
+		}
+
+		#menuBoton{
+			left: calc(var(--anchoMenuBloques) + 2px);
+			transition: left 0.2s;
+		}
+
+		#menuBoton2{
+			right: calc(var(--anchoMenuConsola) + 2px);
+			transition: right 0.2s;
+		}
+
+		#menuBoton:hover, #menuBoton2:hover{
+			background-color: var(--colBack2);
+		}
+
+
+		#menuBloques .bloqueSeleccion{
+			margin-top: 40px;
+		}
+
+		.bloqueSeleccion{
+			width: calc(var(--anchoBloque) - 10 * 2px);
+			margin: auto;
+			border-radius: 20px;
+			-moz-box-shadow:    0 0 10px #000000;
+			-webkit-box-shadow: 0 0 10px #000000;
+			box-shadow:         0 0 10px #000000;
+			padding: 10px;
+			z-index: 4;
+			-webkit-transition: border-radius 0.2s, height 0.2s;
+			transition: border-radius 0.2s, height 0.2s;
+		}
+
+		.startAnimationZoom{
+			animation-name: goBig;
+			animation-duration: 0.2s;
+		}
+
+		@-webkit-keyframes goBig{
+		  0%{
+		  	transform: scale(0);
+		  }
+		  100%{
+		  	transform: scale(1);
+		  }
+		}
+
+		.bloqueSeleccion .name{
+			height: 32px;
+			color: var(--colText3);
+			font-weight: bold;
+			font-size: 20px;
+			line-height: 32px;
+		}
+
+		.bloqueSeleccion .bloque .name{
+			height: 32px;
+			color: var(--colText3);
+			font-size: 16px;
+			width: 80px;
+			float: left;
+			text-align: right;
+			padding-right: 10px;
+			line-height: 32px;
+		}
+
+		.bloqueSeleccion .bloque{
+			width: 100%;
+			height: 40px;
+		}
+
+		.bloqueSeleccion .bloque .modulo{
+			height: 32px;
+			color: var(--colText3);
+			font-size: 16px;
+			margin-left: 0;
+			float: left;
+			line-height: 32px;
+			width: 170px;
+		}
+
+		.contenedorBloques{
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+
+		button:hover{
+			cursor: pointer;
+		}
+
+	</style>
+</head>
+<body>
+
+	<div id = "cabecera">
+		<div class = "desplegable">
+			Proyecto
+			<div class = "desplegado">
+				<div class = "nuevoIco" id = "nuevoProyecto">Nuevo</div>
+				<div class = "exportarIco" id = "exportarProyecto">Exportar</div>
+				<div class = "importarIco" id = "importarProyecto">Importar<input type="file" id="importarProyectoInput" style="display:none" /></div>
+			</div>
+		</div>
+		<div class = "desplegable">
+			Vista
+			<div class = "desplegado">
+				<div class = "tickIco" id = "visualizarModulos">Módulos</div>
+				<div class = "tickIco" id = "visualizarConsola">Consola</div>
+			</div>
+		</div>
+		<div class = "desplegable">
+			Programa
+			<div class = "desplegado">
+				<div class = "verificarIco" id = "compilarProyecto">Verificar/Compilar</div>
+				<div class = "subirIco" id = "subirProyecto">Subir programa al brazo</div>
+			</div>
+		</div>
+		<div class = "line"></div>
+		<button id = "compilarProyectoAccesoRapido">&#9881;</button>
+		<button id = "subirProyectoAccesoRapido">&#11121;</button>
+	</div>
+	<div id = "menuBloques"></div>
+	<div id = "cuerpo"></div>
+	<div id = "menuConsola">
+		<div id = "consola"></div>
+	</div>
+	<button id = "menuBoton">&#9664;</button>
+	<button id = "menuBoton2">&#9654;</button>
+	<div id = "contenedorBloques"></div>
+
+	<script type="text/javascript">
+		
+		function pointInRectangle(x, y, i, j, w, h){
+			return(x >= i && x < i+w && y >= j && y < j+h);
+		}
+
+		function rectangleInRectangle(i1, j1, w1, h1, i2, j2, w2, h2) {
+			return !(i2 > i1+w1 || i2+w2 < i1 || j2 > j1+h1 || j2+h2 < j1);
+		}
+
+		function point_distance(x1,y1,x2,y2){
+			var a = x1 - x2
+			var b = y1 - y2
+			return Math.sqrt( a*a + b*b );
+		}
+
+		function elementPosition(el){
+		    var rect = el.getBoundingClientRect();
+		    return {y: rect.top, x: rect.left, w: rect.right, h: rect.bottom}
+		}
+
+		function removeFromArray(element, array){
+			let index = array.indexOf(element);
+			if (index > -1) {
+			  array.splice(index, 1);
+			}
+		}
+
+		function userDownload(filename, text) {
+			let element = document.createElement('a');
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			element.setAttribute('download', filename);
+
+			element.style.display = 'none';
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		}
+
+		let global_projectName = "";
+
+		let global_style = document.getElementsByTagName('html')[0].style;
+		let global_cabecera = document.getElementById("cabecera");
+		let global_menuBloques = document.getElementById("menuBloques");
+		let global_cuerpo = document.getElementById("cuerpo");
+		let global_contenedorBloques = document.getElementById("contenedorBloques");
+		let global_menuBoton = document.getElementById("menuBoton");
+		let global_menuBoton2 = document.getElementById("menuBoton2");
+
+		let global_nuevoProyecto = document.getElementById("nuevoProyecto");
+		let global_importarProyecto = document.getElementById("importarProyecto");
+		let global_exportarProyecto = document.getElementById("exportarProyecto");
+		let global_cargarProyecto = document.getElementById("cargarProyecto");
+		let global_visualizarModulos = document.getElementById("visualizarModulos");
+		let global_visualizarConsola = document.getElementById("visualizarConsola");
+		let global_compilarProyecto = document.getElementById("compilarProyecto");
+		let global_subirProyecto = document.getElementById("subirProyecto");
+
+		let global_compilarProyectoAccesoRapido = document.getElementById("compilarProyectoAccesoRapido");
+		let global_subirProyectoAccesoRapido = document.getElementById("subirProyectoAccesoRapido");
+
+		let global_menusDesplegables = document.getElementsByClassName("desplegado");
+		let global_menusDesplegablesBut = document.getElementsByClassName("desplegable");
+
+		let global_MenuDesplegableDown = 0;
+
+		for(let menu of global_menusDesplegablesBut){
+			menu.onmousedown = function(){
+				if(global_MenuDesplegableDown == 0){
+					menu.classList.add("hover");
+					for(let menu2 of global_menusDesplegablesBut){
+						menu2.classList.add("active");
+						global_MenuDesplegableDown = 1;
+					}
+				}else{
+					global_MenuDesplegableDown = 0;
+					for(let menu2 of global_menusDesplegablesBut){
+						menu2.classList.remove("active");
+						menu2.classList.remove("hover");
+						global_MenuDesplegableDown = 0;
+					}
+				}
+			};
+			menu.onmouseenter = function(){
+				for(let menu2 of global_menusDesplegablesBut){
+					menu2.classList.remove("hover");
+				}
+				menu.classList.add("hover");
+			};
+		}
+
+		for(let menu of global_menusDesplegables){
+			menu.onmouseup = function(){
+				for(let menu2 of global_menusDesplegablesBut){
+					menu2.classList.remove("active");
+					global_MenuDesplegableDown = 0;
+				}
+			};
+		}
+
+		document.body.addEventListener("mousedown", function(){
+			if(global_MenuDesplegableDown == 2){
+				for(let menu2 of global_menusDesplegablesBut){
+					menu2.classList.remove("active");
+					menu2.classList.remove("hover");
+					global_MenuDesplegableDown = 0;
+				}
+			}else{
+				if(global_MenuDesplegableDown == 1){
+					global_MenuDesplegableDown = 2;
+				}
+			}
+		});
+
+		function asignarFuncionABotonDesplegable(boton, funcion){
+			boton.onmousedown = funcion;
+			boton.onmouseup = funcion;
+		}
+
+		//nuevo proyecto
+
+		function nuevoProyecto(){
+			let nuevoProWin = window.open("?");
+		}
+		asignarFuncionABotonDesplegable(global_nuevoProyecto, function(){nuevoProyecto();});
+
+
+
+		//consola
+
+		class ConsolaControl{
+
+			constructor(){
+				this.consola = document.getElementById("consola");	
+				this.pointer = document.createElement("div");
+				this.pointer.className = "pointer";
+				this.consola.appendChild(this.pointer);
+				this.input = document.createElement("label");
+				this.input2 = document.createElement("input");
+				this.input2.setAttribute("type", "text");
+				this.input.appendChild(this.input2);
+				this.inputControl = false;
+				this.registroComandos = [];
+				this.registroNum = 0;
+				this.spanId = 0;
+
+				let t = this;
+				this.input2.addEventListener("keyup", function(event) {
+				    event.preventDefault();
+				    if(event.keyCode === 13) {
+				        t.writeLine(this.value);
+						t.interpret(this.value);
+						if(this.value != t.registroComandos[t.registroComandos.length-1]){
+							t.registroComandos.push(this.value);
+							if(t.registroComandos.length > 40){
+								t.registroComandos.splice(0, 1);
+							}
+						}
+						t.registroNum = t.registroComandos.length;
+				        this.value = "";
+				        t.consola.scrollTop = t.consola.scrollHeight;
+				    }else
+				    if(event.keyCode === 38){
+				    	if(t.registroNum > 0)
+				    		t.registroNum --;
+				    	this.value = t.registroComandos[t.registroNum];
+				    }else
+				    if(event.keyCode === 40){
+				    	if(t.registroNum < t.registroComandos.length)
+				    		t.registroNum ++;
+				    	let r = t.registroComandos[t.registroNum];
+				    	if(!r){
+				    		r = "";
+				    	}
+				    	this.value = r;
+				    }
+				});
+				this.consola.onclick = function(){
+					t.input2.focus();
+				};
+			}
+
+			write(str, type = "", funcLinck){
+				let strF = "";
+				if(!str || str == ""){
+					strF = "<br>";
+				}else
+				for(let i = 0; i < str.length; i++){
+					switch(str[i]){
+						case "<": strF += "&lt;";
+							break;
+						case ">": strF += "&gt;";
+							break;
+						case "&": strF += "&amp;";
+							break;
+						case "'": strF += "&apos;";
+							break;
+						case '"': strF += "&quot;";
+							break;
+						case "\n": strF += "<br>";
+							break;
+						default: strF += str[i];
+							break;
+					}
+				}
+				let newDiv = document.createElement("div");
+				this.consola.insertBefore(newDiv, this.pointer);
+				newDiv.className = type;
+				newDiv.innerHTML = strF;
+				newDiv.onclick = funcLinck;
+			}
+
+			interpret(name){
+				let comands = name.split(" ");
+				let comandn = comands.length;
+				switch("["+comands[0]+"]"){
+					case "[compile]": compile("["+comands[0]+"]", comands, comandn, this);
+						break;
+					case "[echo]": echo("["+comands[0]+"]", comands, comandn, this);
+						break;
+					case "[clear]": clear("["+comands[0]+"]", comands, comandn, this);
+						break;
+					case "[credits]": credits("["+comands[0]+"]", comands, comandn, this);
+						break;
+					case "[upload]": upload("["+comands[0]+"]", comands, comandn, this);
+						break;
+					case "[name]": setName("["+comands[0]+"]", comands, comandn, this);
+						break;
+					default: this.writeError("Comando "+"["+comands[0]+"]"+" no encontrado");
+						break;
+				}
+				//funciones privadas
+
+				function setName(name, comands, comandsN, consola){
+					if(comandsN > 2){
+						consola.writeError(name+" solo admite 1 argumento");
+						return;
+					}
+					if(comandsN < 2){
+						consola.writeError(name+" necesita 1 argumento");
+						return;
+					}
+					global_projectName = comands[1];
+					consola.writeSuccess("Se ha cambiado el nombre del proyecto a "+global_projectName);
+				}
+
+				function compile(name, comands, comandsN, consola){
+					if(comandsN > 1){
+						consola.writeError(name+" no admite argumentos");
+						return;
+					}
+					global_compilador.compila();
+				}
+
+				function echo(name, comands, comandsN, consola){
+					let r = "";
+					let k = 1;
+					let t = "";
+					if(comands[1] == "error" || comands[1] == "line" || comands[1] == "success" || comands[1] == "warning"){
+						t = comands[1];
+						k ++;
+					}
+
+					for(let i = k; i < comandsN; i++){
+						if(i != 1){
+							r += " ";
+						}
+						r += comands[i];
+					}
+					consola.write(r, t);
+				}
+
+				function clear(name, comands, comandsN, consola){
+					if(comandsN > 1){
+						consola.writeError(name+" no admite argumentos");
+						return;
+					}
+					consola.clear();
+				}
+
+				function credits(name, comands, comandsN, consola){
+					if(comandsN > 1){
+						consola.writeError(name+" no admite argumentos");
+						return;
+					}
+					global_consola.write("ProgrARM");
+					global_consola.write("Desarollado por:\nMáximo García-Cesto y Pablo Ménchen");
+					global_consola.write("Consola:");
+				}
+
+				function upload(name, comands, comandsN, consola){
+					if(comandsN > 1){
+						consola.writeError(name+" no admite argumentos");
+						return;
+					}
+					generarJsonProyecto();
+				}
+
+			}
+
+			writeError(str, funcLinck){
+				this.write(str, "error", funcLinck);
+			}
+
+			writeLine(str, funcLinck){
+				this.write(str, "line", funcLinck);
+			}
+
+			writeWarning(str, funcLinck){ 
+				this.write(str, "warning", funcLinck);
+			}
+
+			writeSuccess(str, funcLinck){ 
+				this.write(str, "success", funcLinck);
+			}
+
+			allowWrite(bol){
+				if(bol){
+					if(!this.inputControl){
+						this.inputControl = true;
+						this.consola.appendChild(this.input);
+					}
+				}else{
+					if(this.inputControl){
+						this.inputControl = false;
+						this.consola.removeChild(this.input);
+						this.input.value = "";
+					}
+				}
+			}
+
+			clear(){
+				while(this.consola.firstChild && this.consola.firstChild != this.pointer){
+				    this.consola.removeChild(this.consola.firstChild);
+				}
+			}
+
+		}
+
+		let global_consola = new ConsolaControl();
+		global_consola.write("ProgrARM");
+		global_consola.write("Desarollado por:\nMáximo García-Cesto y Pablo Ménchen");
+		global_consola.write("Consola:");
+		global_consola.allowWrite(true);
+
+		//------
+
+		//botones retraer menus
+
+		let global_menuRetraido2 = false;
+		let global_menu2W = global_style.getPropertyValue("--anchoMenuConsola");
+		let global_menuRetraido = false;
+		let global_menuW = global_style.getPropertyValue("--anchoMenuBloques");
+
+		function retraerMenu1(bol = !global_menuRetraido){
+			if(!bol){
+				global_menuRetraido = false;
+				global_style.setProperty("--anchoMenuBloques", global_menuW);
+				global_menuBoton.innerHTML = "&#9664;";
+				global_visualizarModulos.classList.add("tickIco");
+			}else{
+				global_menuRetraido = true;
+				global_style.setProperty("--anchoMenuBloques", "0px");
+				global_menuBoton.innerHTML = "&#9654;";
+				global_visualizarModulos.classList.remove("tickIco");
+			}
+		}
+
+		function retraerMenu2(bol = !global_menuRetraido2){
+			if(!bol){
+				global_menuRetraido2 = false;
+				global_style.setProperty("--anchoMenuConsola", global_menu2W);
+				global_menuBoton2.innerHTML = "&#9654;";
+				global_visualizarConsola.classList.add("tickIco");
+			}else{
+				global_menuRetraido2 = true;
+				global_style.setProperty("--anchoMenuConsola", "0px");
+				global_menuBoton2.innerHTML = "&#9664;";
+				global_visualizarConsola.classList.remove("tickIco");
+			}
+		}
+
+		asignarFuncionABotonDesplegable(global_visualizarModulos, function(){retraerMenu1();});
+		asignarFuncionABotonDesplegable(global_visualizarConsola, function(){retraerMenu2();});
+		
+
+		global_menuBoton.onclick = function(){
+			retraerMenu1();
+		}
+
+		global_menuBoton2.onclick = function(){
+			retraerMenu2();
+		}
+
+		let global_mouse_x = 0;
+		let global_mouse_y = 0;
+		let global_mouse_xstart = 0;
+		let global_mouse_ystart = 0;
+		let global_mouse_pressed = false;
+
+		let global_objectsMoveListener = [];
+		let global_bloquesParaEnganchar = [];
+		let global_bloquesParaEnganchar2 = [];
+		let global_bloques = [];
+
+		document.body.addEventListener('wheel', function(e){
+			if(e.deltaY > 0){
+				let move = -20;
+				moveScreen(0, move);
+			}
+			if(e.deltaY < 0){
+				let move = 20;
+				moveScreen(0, move);
+			}
+		});
+
+		global_cuerpo.addEventListener("mousedown", function(){
+			global_mouse_xstart = global_mouse_x;
+			global_mouse_ystart = global_mouse_y;
+			global_mouse_pressed = true;
+		});
+
+		document.body.addEventListener("mouseup", function(){
+			global_mouse_pressed = false;
+		});
+
+		document.body.addEventListener("mousemove", function(e){
+			global_mouse_x = e.clientX;
+			global_mouse_y = e.clientY;
+
+			let r = false;
+			for(let obj of global_objectsMoveListener){
+				if(obj.globalMove()){
+					r = true;
+				}
+			}
+
+			if(!r && global_mouse_pressed){
+				moveScreen(global_mouse_x-global_mouse_xstart, global_mouse_y-global_mouse_ystart);
+				global_mouse_xstart = global_mouse_x;
+				global_mouse_ystart = global_mouse_y;
+			}
+
+		});
+
+		let global_backgroundMoveX = 0;
+		let global_backgroundMoveY = 0;
+
+		function moveScreen(x, y){
+			global_backgroundMoveX += x;
+			global_backgroundMoveY += y;
+			global_backgroundMoveX %= 100;
+			global_backgroundMoveY %= 100;
+			global_cuerpo.style.backgroundPosition = "-2px "+(-1+global_backgroundMoveY)+"px, "+(-1+global_backgroundMoveX)+"px -2px, -1px "+(-1+global_backgroundMoveY)+"px, "+(-1+global_backgroundMoveX)+"px -1px";
+			for(let obj of global_objectsMoveListener){
+				obj.moveScreen(x, y);
+			}
+		}
+
+		function addMoveEventListener(obj){
+			global_objectsMoveListener.push(obj);
+		}
+
+		class BloqueSeleccion{
+
+			constructor(name, color){
+
+				this.strName = name;
+				this.strColor = color;
+
+				this.enAccion = false;
+				this.mover = false;
+				this.xx = 0;
+				this.yy = 0;
+				this.x = -1000;
+				this.y = -1000;
+				this.h = 40;
+				this.extraH = 0;
+				this.body = document.createElement("div");
+				this.body.className = "bloqueSeleccion";
+				this.body.style.backgroundColor = color;
+				this.body.style.height = (this.h+this.extraH)+"px";
+				global_menuBloques.appendChild(this.body);
+
+				if(name != null || name != ""){
+					this.name = document.createElement("div");
+					this.name.className = "name";
+					this.name.innerHTML = name;
+					this.body.appendChild(this.name);
+				}
+
+				addMoveEventListener(this);
+				let t = this;
+				this.body.addEventListener("mousedown", function(e){
+					t.onclickDown();
+				});
+				document.body.addEventListener("mouseup", function(e){
+					t.onclickUp();
+				});
+
+				this.bloqueEnganchadoArriba = null;
+				this.bloqueEnganchadoAbajo = null;
+				this.bloqueAnteriorArriba = null;
+
+				this.bloqueEnganchadoIzquierda = null;
+				this.bloqueEnganchadoDerecha = null;
+				this.bloqueAnteriorIzquierda = null;
+
+				this.control = false;
+				this.animationCreate = false;
+
+				this.modules = [];
+			}
+
+			addModule(element){
+				this.h += element.h;
+				this.setH(this.h);
+				element.addTo(this);
+				this.modules.push(element);
+				return element;
+			}
+
+			setH(h){
+				this.setHExtraH(h, this.extraH);
+			}
+
+			setExtraH(h){
+				this.setHExtraH(this.h, h);
+			}
+
+			setHExtraH(h, extraH){
+				this.h = h;
+				this.extraH = extraH;
+				let extra2 = 0;
+				if(this.bloqueEnganchadoIzquierda){
+					extra2 = -20;
+				}
+				this.body.style.height = (this.h+this.extraH+extra2)+"px";
+				if(this.bloqueEnganchadoAbajo){
+					this.bloqueEnganchadoAbajo.gotoDownTo(this);
+				}
+			}
+
+			getH(){
+				return this.h+this.extraH;
+			}
+
+			setDisabled(bol){
+				for(let mod of this.modules){
+					mod.setDisabled(bol);
+				}
+			}
+
+			compile(compilator, line = []){
+				if(this == global_start){
+					if(this.bloqueEnganchadoAbajo){
+						return this.bloqueEnganchadoAbajo.compile(compilator);;
+					}
+				}
+				let str = this.getR();
+				let name = str.split(",")[0];
+				if(line.includes(name)){
+					compilator.addError("No pueden ejecutarse dos comandos ["+name+"] al mismo tiempo en la mano robótica.", this);
+				}
+				line.push(name);
+				if(this.bloqueEnganchadoDerecha){
+					str += ";"+this.bloqueEnganchadoDerecha.compile(compilator, line);
+				}
+				if(this.bloqueEnganchadoAbajo){
+					str += "|"+this.bloqueEnganchadoAbajo.compile(compilator);
+				}
+				this.compiled = true;
+				return str;
+			}
+
+			compileStart(){
+				this.compiled = false;
+			}
+
+			getR(){
+
+			}
+
+			onclickDown(){
+				this.mover = true;
+				let pos = elementPosition(this.body);
+				if(!this.enAccion){
+					let copy = new this.constructor(this.strName, this.strColor);
+					global_menuBloques.insertBefore(copy.body, this.body);
+					this.body.classList.add("startAnimationZoom");
+					this.animationCreate = true;
+					this.empezarMovimiento();
+				}else{
+					this.setUpZIndex(true);
+				}
+				if(this.bloqueEnganchadoArriba){
+					this.gotoDownTo(this.bloqueEnganchadoArriba);
+					this.bloqueEnganchadoArriba.body.style.borderBottom = "10px solid var(--colLines2)";
+				}
+				if(this.bloqueEnganchadoIzquierda){
+					this.bloqueEnganchadoIzquierda.body.style.borderRight = "10px solid var(--colLines2)";
+				}
+				this.xx = global_mouse_x-pos.x;
+				this.yy = global_mouse_y-pos.y;
+				this.globalMove();
+			}
+
+			onclickUp(){
+				if(this.mover){
+					this.setUpZIndex(false);
+					this.mover = false;
+					if(this.bloqueEnganchadoArriba){
+						this.gotoDownTo(this.bloqueEnganchadoArriba);
+						this.bloqueEnganchadoArriba.body.style.borderBottom = "none";
+					}
+					if(this.bloqueEnganchadoIzquierda){
+						this.gotoLeftTo(this.bloqueEnganchadoIzquierda);
+						this.bloqueEnganchadoIzquierda.body.style.borderRight = "none";
+					}
+					if(!global_menuRetraido && this.x < 340){
+						this.remove();
+					}
+				}
+			}
+
+			remove(){
+				global_contenedorBloques.removeChild(this.body);
+				removeFromArray(this, global_bloquesParaEnganchar);
+				removeFromArray(this, global_bloquesParaEnganchar2);
+				removeFromArray(this, global_bloques);
+				if(this.bloqueEnganchadoDerecha)
+					this.bloqueEnganchadoDerecha.remove();
+				if(this.bloqueEnganchadoAbajo)
+					this.bloqueEnganchadoAbajo.remove();
+			}
+
+			esControl(){
+				global_bloquesParaEnganchar.push(this);
+				global_bloquesParaEnganchar2.push(this);
+				this.control = true;
+				this.enAccion = true;
+				this.body.style.position = "absolute";
+				global_menuBloques.removeChild(this.body);
+				global_contenedorBloques.appendChild(this.body);
+				this.goto(window.innerWidth/2-240, 200);
+				this.body.style.zIndex = "1";
+			}
+
+			empezarMovimiento(){
+				if(this.control) 
+					return;
+
+				this.enAccion = true;
+				global_bloquesParaEnganchar.push(this);
+				global_bloquesParaEnganchar2.push(this);
+				global_bloques.push(this);
+				this.body.style.position = "absolute";
+				global_menuBloques.removeChild(this.body);
+				global_contenedorBloques.appendChild(this.body);
+				this.body.style.zIndex = "4";
+				this.setDisabled(false);
+			}
+
+			globalMove(){
+				if(this.mover){
+					let newY = (global_mouse_y-this.yy);
+					let newX = (global_mouse_x-this.xx);
+					if(newY < 50){
+						moveScreen(0, 10);
+						newY = 50;
+					}
+					if(newY+this.h+20 > document.body.offsetHeight){
+						moveScreen(0, -10);
+						newY = document.body.offsetHeight-this.h-20;
+					}
+					if(!global_menuRetraido){
+						if(this.control){
+							if(newX < 340){
+								moveScreen(10, 0);
+								newX = 340;
+							}
+						}else{
+							if(newX < 0){
+								newX = 0;
+								moveScreen(10, 0);
+							}
+						}
+					}else{
+						if(newX < 0){
+							moveScreen(10, 0);
+							newX = 0;
+						}
+					}
+					if(global_menuRetraido2){
+						if(newX+300 > document.body.offsetWidth){
+							moveScreen(-10, 0);
+							newX = document.body.offsetWidth-300;
+						}
+					}else{
+						if(newX+300 > document.body.offsetWidth-500){
+							moveScreen(-10, 0);
+							newX = document.body.offsetWidth-800;
+						}
+					}
+
+					this.goto(newX, newY);
+					
+					let cambiadoVertical = false;
+					let cambiadoHorizontal = false;
+					//enganchar arriba
+					if(!this.bloqueEnganchadoIzquierda && !this.control)
+					if(this.bloqueEnganchadoArriba){
+						if(!rectangleInRectangle(this.x, this.y, 300, 40, 
+						this.bloqueEnganchadoArriba.x, this.bloqueEnganchadoArriba.y+this.bloqueEnganchadoArriba.getH()+20, 300, 40))
+							this.engancharArriba(null);
+					}else
+					for(let bloque of global_bloquesParaEnganchar){
+						if(bloque != this){
+							if(rectangleInRectangle(this.x, this.y, 300, 40, bloque.x, bloque.y+bloque.getH()+20, 300, 40)){
+								this.engancharArriba(bloque);
+								bloque.engancharAbajo(this);
+								break;
+							}
+						}
+					}
+
+					if(this.bloqueEnganchadoArriba != this.bloqueAnteriorArriba){
+						cambiadoVertical = true;
+						if(this.bloqueAnteriorArriba != null){
+							this.bloqueAnteriorArriba.engancharAbajo(null);						
+							this.bloqueAnteriorArriba.updateBorderRadius();
+							global_bloquesParaEnganchar.push(this.bloqueAnteriorArriba);
+						}
+						if(this.bloqueEnganchadoArriba != null){				
+							this.bloqueEnganchadoArriba.updateBorderRadius();
+							removeFromArray(this.bloqueEnganchadoArriba, global_bloquesParaEnganchar);
+						}
+						this.bloqueAnteriorArriba = this.bloqueEnganchadoArriba;
+					}
+
+					//-----------------------
+					//enganchar izquierda
+					if(!this.bloqueEnganchadoArriba && !this.bloqueEnganchadoAbajo && !this.control)
+					if(this.bloqueEnganchadoIzquierda){
+						if(!rectangleInRectangle(this.x, this.y+30, 30, this.getH()-15, 
+						this.bloqueEnganchadoIzquierda.x+290, this.bloqueEnganchadoIzquierda.y, 30, this.bloqueEnganchadoIzquierda.getH()+30))
+							this.engancharIzquierda(null);
+					}else
+					for(let bloque of global_bloquesParaEnganchar2){
+						if(bloque != this && !bloque.control){
+							if(rectangleInRectangle(this.x, this.y+30, 30, this.getH()-15, bloque.x+290, bloque.y, 30, bloque.getH()+30)){
+								this.engancharIzquierda(bloque);
+								bloque.engancharDerecha(this);
+								break;
+							}
+						}
+					}
+					if(this.bloqueEnganchadoIzquierda != this.bloqueAnteriorIzquierda){
+						cambiadoHorizontal = true;
+						if(this.bloqueAnteriorIzquierda != null){
+							this.bloqueAnteriorIzquierda.engancharDerecha(null);						
+							this.bloqueAnteriorIzquierda.updateBorderRadius();
+							this.bloqueAnteriorIzquierda.updateHExtra();
+							global_bloquesParaEnganchar2.push(this.bloqueAnteriorIzquierda);
+						}
+						if(this.bloqueEnganchadoIzquierda != null){				
+							this.bloqueEnganchadoIzquierda.updateBorderRadius();
+							removeFromArray(this.bloqueEnganchadoIzquierda, global_bloquesParaEnganchar2);
+							removeFromArray(this, global_bloquesParaEnganchar);
+						}else{
+							global_bloquesParaEnganchar.push(this);
+						}
+						this.updateHExtra();
+						this.bloqueAnteriorIzquierda = this.bloqueEnganchadoIzquierda;
+					}
+					//-----------------------
+
+					if(cambiadoHorizontal || cambiadoVertical){
+						this.updateBorderRadius();
+					}
+
+					return true;
+				}
+				return false;
+			}
+
+			updateHExtra(){
+					//vamos al principio del bloque
+					let obj = this;
+					let max = this.h;
+					while(obj.bloqueEnganchadoIzquierda != null){
+						obj = obj.bloqueEnganchadoIzquierda;
+						if(obj.h > max){
+							max = obj.h;
+						}
+					}
+
+					//vamos al final del bloque
+					while(obj.bloqueEnganchadoDerecha != null){
+						obj = obj.bloqueEnganchadoDerecha;
+						if(obj.h > max){
+							max = obj.h;
+						}
+					}
+
+					//ponemos en todos los bloques el maximo h
+					obj.setExtraH(max-obj.h);
+					while(obj.bloqueEnganchadoIzquierda != null){
+						obj = obj.bloqueEnganchadoIzquierda;
+						obj.setExtraH(max-obj.h);
+					}
+			}
+
+			engancharAbajo(obj){
+				this.bloqueEnganchadoAbajo = obj;
+
+			}
+
+			engancharArriba(obj){
+				this.bloqueEnganchadoArriba = obj;
+			}
+
+			engancharIzquierda(obj){
+				this.bloqueEnganchadoIzquierda = obj;
+
+			}
+
+			engancharDerecha(obj){
+				this.bloqueEnganchadoDerecha = obj;
+			}
+
+			updateBorderRadius(){
+				this.rArriba = false;
+				this.rAbajo = false;
+				this.rIzquierda = false;
+				this.rDerecha = false;
+
+				if(this.bloqueEnganchadoArriba){
+					this.rArriba = true;
+				}
+				if(this.bloqueEnganchadoAbajo){
+					this.rAbajo = true;
+					this.body.style.borderBottom = "10px solid var(--colLines2)";
+				}else{
+					this.body.style.borderBottom = "none";
+				}
+
+				if(this.bloqueEnganchadoIzquierda){
+					this.rIzquierda = true;
+				}
+				if(this.bloqueEnganchadoDerecha){
+					this.rDerecha = true;
+					this.body.style.borderRight = "10px solid var(--colLines2)";
+				}else{
+					this.body.style.borderRight = "none";
+				}
+
+				let r1 = "20px";
+				let r2 = "20px";
+				let r3 = "20px";
+				let r4 = "20px";
+				if(this.rArriba){
+					r1 = "0";
+					r2 = "0";
+				}
+				if(this.rAbajo){
+					r3 = "0";
+					r4 = "0";
+				}
+				if(this.rIzquierda){
+					r1 = "0";
+					r4 = "0";
+				}
+				if(this.rDerecha){
+					r2 = "0";
+					r3 = "0";
+				}
+
+				this.body.style.borderRadius = r1+" "+r2+" "+r3+" "+r4;
+			}
+
+			goto(x, y){
+				this.x = x;
+				this.y = y;
+				this.body.style.top = y+"px";
+				this.body.style.left = x+"px";
+				if(this.bloqueEnganchadoAbajo){
+					this.bloqueEnganchadoAbajo.gotoDownTo(this);
+				}
+				if(this.bloqueEnganchadoDerecha){
+					this.bloqueEnganchadoDerecha.gotoLeftTo(this);
+				}
+			}
+
+			gotoDownTo(bloque){
+				this.goto(bloque.x, bloque.y+bloque.getH()+15);
+			}
+
+			gotoLeftTo(bloque){
+				let y = 0;
+				if(!bloque.bloqueEnganchadoIzquierda)
+					y = 7;
+				this.goto(bloque.x+300, bloque.y+y);
+			}
+
+			moveScreen(xmore, ymore){
+				if(this.enAccion){
+					this.x += xmore;
+					this.y += ymore;
+					this.body.style.top = this.y+"px";
+					this.body.style.left = this.x+"px";
+				}
+			}
+
+			setUpZIndex(bool){
+				if(bool){
+					this.body.style.zIndex = "4";
+					if(this.animationCreate){
+						this.body.classList.remove("startAnimationZoom");
+						this.animationCreate = false;
+					}
+
+					global_contenedorBloques.removeChild(this.body);
+					global_contenedorBloques.appendChild(this.body);
+				}else{	
+					this.body.style.zIndex = "2";
+				}
+				if(this.bloqueEnganchadoAbajo){
+					this.bloqueEnganchadoAbajo.setUpZIndex(bool);
+				}
+				if(this.bloqueEnganchadoDerecha){
+					this.bloqueEnganchadoDerecha.setUpZIndex(bool);
+				}
+			}
+
+			darJsonId(id){
+				this.jsonId = id;
+			}
+
+			generarJson(){
+				let modulos = [];
+				for(let modulo of this.modules){
+					modulos.push(modulo.generarJson());
+				}
+
+				let bloqueEnganchadoArriba = null;
+				if(this.bloqueEnganchadoArriba)
+					bloqueEnganchadoArriba = this.bloqueEnganchadoArriba.jsonId;
+
+				let bloqueEnganchadoAbajo = null;
+				if(this.bloqueEnganchadoAbajo)
+					bloqueEnganchadoAbajo = this.bloqueEnganchadoAbajo.jsonId;
+
+				let bloqueEnganchadoIzquierda = null;
+				if(this.bloqueEnganchadoIzquierda)
+					bloqueEnganchadoIzquierda = this.bloqueEnganchadoIzquierda.jsonId;
+				
+				let bloqueEnganchadoDerecha = null;
+				if(this.bloqueEnganchadoDerecha)
+					bloqueEnganchadoDerecha = this.bloqueEnganchadoDerecha.jsonId;
+
+				return {
+					className: this.constructor.name,
+					id : this.jsonId,
+					x: this.x,
+					y: this.y,
+					extraH: this.extraH,
+					bloqueEnganchadoArriba: bloqueEnganchadoArriba,
+					bloqueEnganchadoAbajo: bloqueEnganchadoAbajo,
+					bloqueEnganchadoIzquierda: bloqueEnganchadoIzquierda,
+					bloqueEnganchadoDerecha: bloqueEnganchadoDerecha,
+					bloquesParaEnganchar: global_bloquesParaEnganchar.includes(this),
+					bloquesParaEnganchar2: global_bloquesParaEnganchar2.includes(this),
+					modules : modulos
+				}
+			}
+
+			cargarJson(json){
+				this.x = json.x;
+				this.y = json.y;
+				this.setExtraH(json.extraH);
+			}
+
+		}
+
+		class Modulo{
+
+			constructor(name){
+				this.nombre = name;
+				this.body = document.createElement("div");
+				this.body.className = "bloque";
+				this.h = 42;
+
+				this.name = document.createElement("div");
+				this.name.className = "name";
+				this.name.innerHTML = name;
+				this.body.appendChild(this.name);
+				this.elements = [];
+			}
+
+			getValue(){
+
+			}
+
+			setHeight(h){
+				this.h = h;
+			}
+
+			addHeight(h){
+				this.h += h;
+			}
+
+			addElement(element){
+				this.body.appendChild(element);
+				element.disabled = true;
+				this.elements.push(element);
+				return element;
+			}
+
+			addTo(obj){
+				obj.body.appendChild(this.body);
+			}
+
+			setDisabled(bol){
+				for(let element of this.elements){
+					element.disabled = bol;
+				}
+			}
+
+			generarJson(){
+				return {
+					nombre : this.nombre,
+					h : this.h,
+				};
+			}
+
+		}
+
+		class Modulo_seleccionDeRangoDiscreto extends Modulo{
+			
+			constructor(name, valuesArr){
+				super(name);
+				this.input = document.createElement("select");
+				this.input.className = "modulo";
+				this.valuesArr = valuesArr;
+				for(let value of this.valuesArr){
+					this.input.innerHTML += "<option value='"+value+"'>"+value+"</option>"; 
+				}
+				this.addElement(this.input);
+			}
+
+			getValue(){
+				return this.input.value;
+			}
+
+			generarJson(){
+				let obj = super.generarJson();
+				obj.valuesArr = this.valuesArr;
+				return obj;
+			}
+
+		}
+
+		class Modulo_cajaTextoNumerica extends Modulo{
+			
+			constructor(name, minimo = null, maximo = null){
+				super(name);
+				this.input = document.createElement("input");
+				this.input.setAttribute("type", "number");
+				this.input.className = "modulo";
+				this.minimo = minimo;
+				this.maximo = maximo;
+				let minimo1 = minimo;
+				let maximo1 = maximo;
+				this.input.value = 0;
+				this.input.onchange = function(){
+					if(this.value == ""){
+						this.value = 0;
+					}
+					if(minimo1 != null){
+						if(this.value < minimo1){
+							this.value = minimo1;
+						}
+					}
+					if(maximo1 != null){
+						if(this.value > maximo1){
+							this.value = maximo1;
+						}
+					}
+				}
+				this.addElement(this.input);
+			}
+
+			getValue(){
+				return this.input.value;
+			}
+
+			generarJson(){
+				let obj = super.generarJson();
+				obj.minimo = this.minimo;
+				obj.maximo = this.maximo;
+				return obj;
+			}
+
+		}
+
+		class BloqueSeleccion_start extends BloqueSeleccion{
+
+			constructor(){
+				super("Empezar", "var(--colHighlight2)");
+				this.esControl();
+			}
+
+			getR(){
+				return "";
+			}
+
+		}
+
+		class BloqueSeleccion_pinza extends BloqueSeleccion{
+
+			constructor(){
+				super("Pinza", "var(--colHighlight1)");
+				this.modulo1 = this.addModule(new Modulo_cajaTextoNumerica("Ángulo:", 0, 180));
+			}
+
+			getR(){
+				return "4,"+this.modulo1.getValue();
+			}
+
+		}
+
+		class BloqueSeleccion_giroPinza extends BloqueSeleccion{
+
+			constructor(){
+				super("GiroPinza", "var(--colHighlight3)");
+				this.modulo1 = this.addModule(new Modulo_cajaTextoNumerica("Ángulo:", 0, 180));
+			}
+
+			getR(){
+				return "5,"+this.modulo1.getValue();
+			}
+
+		}
+
+		class BloqueSeleccion_servo extends BloqueSeleccion{
+
+			constructor(){
+				super("Servo", "var(--colHighlight4)");
+				this.modulo1 = this.addModule(new Modulo_seleccionDeRangoDiscreto("Número:", ["Codo bajo", "Codo medio", "Codo alto"]));
+				this.modulo2 = this.addModule(new Modulo_cajaTextoNumerica("Ángulo:", 0, 180));
+			}
+
+			getR(){
+				let n = 0;
+				switch(this.modulo1.getValue()){
+					case "Codo bajo": n = 1; break;
+					case "Codo medio": n = 2; break;
+					case "Codo alto": n = 3; break;
+				}
+				return n+","+this.modulo2.getValue();
+			}
+
+		}
+
+		class BloqueSeleccion_base extends BloqueSeleccion{
+
+			constructor(){
+				super("Base", "var(--colHighlight5)");
+				this.modulo1 = this.addModule(new Modulo_cajaTextoNumerica("Ángulo:", 0, 180));
+			}
+
+			getR(){
+				return "6,"+this.modulo1.getValue();
+			}
+
+		}
+
+		class BloqueSeleccion_sleep extends BloqueSeleccion{
+
+			constructor(){
+				super("Sleep (ms)", "var(--colHighlight4)");
+				this.modulo1 = this.addModule(new Modulo_cajaTextoNumerica("Tiempo:", 0));
+			}
+
+			getR(){
+				return "sleep,"+this.modulo1.getValue();
+			}
+
+		}
+
+		class BloqueSeleccion_led extends BloqueSeleccion{
+
+			constructor(){
+				super("LED", "var(--colHighlight5)");
+				this.modulo1 = this.addModule(new Modulo_seleccionDeRangoDiscreto("Id:", ["Amarillo", "Verde", "Rojo", "Azúl"]));
+				this.modulo2 = this.addModule(new Modulo_seleccionDeRangoDiscreto("Estado:", ["Encendido", "Apagado"]));
+			}
+
+			getR(){
+				let bol = 0;
+				if(this.modulo2.getValue() == "Abierto"){
+					bol = 1;
+				}
+				return "led"+this.modulo1.getValue()+","+bol;
+			}
+
+		}
+
+		new BloqueSeleccion_pinza();
+		new BloqueSeleccion_giroPinza();
+		new BloqueSeleccion_servo();
+		new BloqueSeleccion_base();
+		//new BloqueSeleccion_sleep();
+		//new BloqueSeleccion_led();
+		
+		let global_start = new BloqueSeleccion_start();
+
+		class Compilador{
+
+			constructor(){
+				this.r = "";
+				this.errorNames = ["El compilador no ha compilado nada"];
+				this.errorBlocks = [null];
+				this.warningNames = [];
+				this.warningBlocks = [];
+				this.error = 1;
+				this.warning = 0;
+			}
+
+			compila(){
+				this.errorNames = [];
+				this.errorBlocks = [];
+				this.warningNames = [];
+				this.warningBlocks = [];
+				this.error = 0;
+				this.warning = 0;
+
+				retraerMenu2(false);
+				global_consola.write("El compilador ha empezado");
+
+				for(let bloque of global_bloques){
+					bloque.compileStart();
+				}
+				this.r = global_start.compile(this);
+
+				for(let bloque of global_bloques){
+					if(!bloque.compiled){
+						global_consola.writeWarning("Un bloque no está unido al bloque empezar,\n[Pulsa aquí] para visualizarlo", function(){
+							moveScreen(-bloque.x+window.innerWidth/2-200, -bloque.y+window.innerHeight/2-bloque.getH()/2);
+						});
+					}
+				}
+
+				if(global_compilador.compilarError() > 0){
+					for(let i = 0; i < this.error; i++){
+						if(this.errorBlocks[i] != null){
+							let t = this;
+							global_consola.writeError(this.errorNames[i]+"\n [Pulsa aquí] para ver el bloque", function(){
+								moveScreen(-t.errorBlocks[i].x+window.innerWidth/2-200, -t.errorBlocks[i].y+window.innerHeight/2-t.errorBlocks[i].getH()/2);
+							});
+						}
+						else
+							global_consola.writeError(this.errorNames[i]);
+					}
+					global_consola.writeError("El compilador ha finalizado con errores");
+					return;
+				}
+
+				global_consola.writeSuccess("El compilador ha finalizado existosamente");
+				global_consola.write("Salida:\n["+global_compilador.compilarResult()+"]");
+			}
+
+			addError(name, block = null){
+				this.errorNames.push(name);
+				this.errorBlocks.push(block);
+				this.error ++;
+			}
+
+			addWarning(name, block = null){
+				this.warningNames.push(name);
+				this.warningBlocks.push(block);
+				this.warning ++;
+			}
+
+			compilarError(){
+				return this.error;
+			}
+
+			compilarResult(){
+				return this.r;
+			}
+
+			pararCompilacion(errorName){
+				this.errorName = "";
+				this.error = 1;
+			}
+
+		}
+
+		let global_compilador = new Compilador();
+
+		asignarFuncionABotonDesplegable(global_compilarProyecto, function(){global_compilador.compila();});
+		global_compilarProyectoAccesoRapido.onclick = function(){
+			global_compilador.compila();
+		};
+
+		//guardar - cargar
+
+		function generarJsonProyecto(){
+			let bloques = [];
+			global_start.darJsonId(0);
+			for(let i = 0; i < global_bloques.length; i++){
+				global_bloques[i].darJsonId(i+1);
+			}
+			bloques.push(global_start.generarJson());
+			for(let bloque of global_bloques){
+				bloques.push(bloque.generarJson());
+			}
+			return JSON.stringify(bloques);
+		}
+
+		function cargarJsonProyecto(json){
+			global_bloquesParaEnganchar = [];
+			global_bloquesParaEnganchar2 = [];
+			global_start.remove();;
+			global_bloques = [];
+			let bloques = JSON.parse(json);
+			let mapaId = new Map();
+			for(let bloque of bloques){
+				let nuevoBloque = null;
+				switch(bloque.className){
+					case "BloqueSeleccion_led": nuevoBloque = new BloqueSeleccion_led(); break;
+					case "BloqueSeleccion_sleep": nuevoBloque = new BloqueSeleccion_sleep(); break;
+					case "BloqueSeleccion_servo": nuevoBloque = new BloqueSeleccion_servo(); break;
+					case "BloqueSeleccion_start": nuevoBloque = new BloqueSeleccion_start(); break;
+					case "BloqueSeleccion_pinza": nuevoBloque = new BloqueSeleccion_pinza(); break;
+				}
+				mapaId.set(bloque.id, nuevoBloque);
+			}
+			global_start = mapaId.get(0);
+			for(let bloque of bloques){
+				let bloque1 = mapaId.get(bloque.id);
+				if(bloque.bloqueEnganchadoAbajo != null){
+					let bloque2 = mapaId.get(bloque.bloqueEnganchadoAbajo);
+					bloque1.engancharAbajo(bloque2);
+					bloque2.engancharArriba(bloque1);
+					bloque2.updateBorderRadius();
+				}
+				if(bloque.bloqueEnganchadoDerecha != null){
+					let bloque2 = mapaId.get(bloque.bloqueEnganchadoDerecha);
+					bloque1.engancharDerecha(bloque2);
+					bloque2.engancharIzquierda(bloque1);
+					bloque2.updateBorderRadius();
+				}
+				bloque1.empezarMovimiento();
+				bloque1.cargarJson(bloque);
+				bloque1.moveScreen(0, 0);
+				bloque1.updateBorderRadius();
+			}
+		}
+
+		function exportar(){
+			global_consola.write("Generando archivo...");
+			let json = generarJsonProyecto();
+			global_consola.writeSuccess("Archivo generado correctamente.");
+			userDownload("nombre.obj", json);
+		}
+
+		asignarFuncionABotonDesplegable(global_exportarProyecto, function(){exportar();});
+		asignarFuncionABotonDesplegable(global_subirProyecto, function(){generarJsonProyecto();});
+		global_subirProyectoAccesoRapido.onclick = function(){
+			generarJsonProyecto();
+		}
+		let global_importarProyectoInput = document.getElementById("importarProyectoInput");
+		asignarFuncionABotonDesplegable(global_importarProyecto, function(){global_importarProyectoInput.click();});
+
+		global_importarProyectoInput.addEventListener("change", function(e) {
+			let file = global_importarProyectoInput.files[0];
+			let reader = new FileReader();
+
+			reader.onload = function(e) {
+				let content = reader.result;
+				console.log(content);
+				cargarJsonProyecto(content);
+			}
+
+			reader.readAsText(file);	
+		});
+
+		global_subirProyectoAccesoRapido.onclick = function(){
+			subirProyectoAlBrazo();
+		};
+
+		asignarFuncionABotonDesplegable(global_subirProyecto, function(){
+			subirProyectoAlBrazo();
+		});
+
+		function subirProyectoAlBrazo(){
+			if(global_projectName == ""){
+				global_consola.writeError("El proyecto no tiene nombre, usa el comando name <nombre> para asignar un nombre al proyecto");
+				return;
+			}
+			global_compilador.compila();
+			if(global_compilador.compilarError() == 0) {
+				global_consola.write("Subiendo información al brazo...");
+				let resultado = global_compilador.compilarResult();
+				let formData = new FormData();
+				formData.append("name", global_projectName);
+				formData.append("body", resultado);
+				function postAjax() {
+					let xhttp = new XMLHttpRequest();
+						xhttp.onreadystatechange = function() {
+						if (this.readyState == 4 && this.status == 200) {
+							if(this.responseText == "ok"){
+								global_consola.writeSuccess("La información se ha subido al brazo exitosamente con el nombre: "+global_projectName);
+							}else{
+								global_consola.writeError("Ha habido un error subiendo la información al brazo <"+this.responseText+">");
+							}
+						}
+					};
+					xhttp.open("POST", "load", true);
+					xhttp.send(formData);
+				}
+				postAjax();
+			}else{
+				global_consola.writeError("No se ha subido el programa al brazo...");
+			}
+		}
+
+	</script>
+</body>
+</html>
