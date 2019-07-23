@@ -45,7 +45,7 @@ El cliente está hecho con HTML, CSS y JavaScript, usando tecnología AJAX para 
 Entre el servidor y el brazo se colocó una arduino con una pantalla táctil y un lector de tarjetas SD, de manera que se le permitiera al usuario almacenar los distintos programas creados con el servidor web, y ejecutarlos cuando quisiera para que el brazo realizara las acciones.
 La pantalla también permite que el usuario se pueda conectar a la red escribiendo en un teclado táctil la contraseña de la red y el nombre de esta.
 Para conectar el arduino de la pantalla con el nodeMCU (del cliente) y el arduino del servidor, se usaron los puertos de conexión serial que presentan los arduinos.
-![enter image description here](https://raw.githubusercontent.com/MaximoGCH/ProgrARM/add-readme/readmeFiles/Diapositiva8.PNG)
+![enter image description here](/readmeFiles/Diapositiva8.PNG)
 ## Contacto
 **Máximo García-Cesto Huret** 
 
